@@ -5,12 +5,13 @@ CREATE TABLE patients (
   PRIMARY KEY(id)
 );
 
-CREATE TABLE medical_hitories (
+CREATE TABLE medical_histories (
   id INT GENERATED ALWAYS AS IDENTITY,
   admitted_at TIMESTAMP,
   patient_id INT,
   status VARCHAR(100),
-  PRIMARY KEY(id)
+  PRIMARY KEY(id),
+  FOREIGN KEY(patient_id) REFERENCES patients(id)
 );
 
 CREATE TABLE invoices (
@@ -38,7 +39,7 @@ CREATE TABLE medical_hitories_treatments(
   FOREIGN key (medical_histories_id) REFERENCES medical_histories(id)
 );
 
-CREATE TABLE invoice_Items (
+CREATE TABLE invoice_items (
   id INT GENERATED ALWAYS AS IDENTITY,
   unit_price DECIMAL(5,2),
   quantity INT,
@@ -49,3 +50,11 @@ CREATE TABLE invoice_Items (
   FOREIGN key (invoice_id) REFERENCES invoice(id),
   FOREIGN key (treatment_id) REFERENCES treatments(id)
 );
+
+CREATE INDEX ON medical_histories (patient_id);
+CREATE INDEX ON invoices (medical_history_id);
+CREATE INDEX ON invoice_items (invoice_id);
+CREATE INDEX ON invoice_items (treatment_id);
+CREATE INDEX ON medical_histories_treatments (medical_history_id);
+CREATE INDEX ON medical_histories_treatments (treatment_id);
+
